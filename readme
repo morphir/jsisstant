@@ -1,0 +1,4 @@
+A shell script that helps setting up a javascript enviroment.
+Like directory structure,  basic libs. Sets up git (with respective branches).
+Requires node.js and git to be installed.
+Uses grunt for automation.

@@ -1,0 +1,65 @@
+#!/bin/sh
+#prerquesites: git, node.js, grunt
+#to install grunt: npm install -g grunt
+#name your project first
+while [ -z $PROJECTNAME ]; do
+	echo "Enter the name for your project (one word): \c"
+	read PROJECTNAME #do some input-validation here maybe..
+done
+echo "now setting up $PROJECTNAME"
+mkdir $PROJECTNAME
+echo "Enter a one line description of your project : \c"
+read DESCRIPTION
+
+#setup the projects directory structure
+mkdir $PROJECTNAME/{src,tests,automation}
+
+#download and setup different libraries (like qunit and jquery)
+
+#setup initial git repository
+cd $PROJECTNAME
+touch readme
+echo "Project name: " $PROJECTNAME >> readme
+echo "Project description: " $DESCRIPTION >> readme
+git init .
+git add readme
+git commit -m 'initial directory structure and readme file'
+
+git branch automation master
+git branch testsuite master
+git branch devel master
+
+echo "
+Directory description
+
+libs/ - this directory contains all referenced libararies in the src folder
+exampleproject/ - is the project folder, exampleproject is the name of project.
+exampleproject/src - contains all the project source files.
+exampleproject/automation - contains the grunt.js file that automates test/minifying etc. 
+exampleproject/test - contains all the unit tests for the source" >> readme
+
+#lets create the libs directory if it doesn't already exist.
+#then download the lates and greatest version
+
+cd ..
+
+if [ ! -d libs ]; then
+	echo "libs directory doesn't excist. I will create it.."
+	mkdir libs
+	cd libs
+	mkdir qunit && mkdir jquery
+fi
+cd jquery/
+if [ -e "jquery-latest.js" ]; then
+	rm jquery-latest.js && echo "jQuery: re-downloads jquery-latest.js"
+fi
+echo "#####   updates jquery   #####"
+wget http://code.jquery.com/jquery-latest.js
+cd ../qunit
+if [ -e "qunit-git.js" ]; then
+	rm qunit-git.js && echo "Qunit: re-downloads qunit-git.js"
+	rm qunit-git.css && echo "Qunit: re-downloads qunit-git.css"
+fi
+echo "#####   updates qunit    #####"
+wget http://code.jquery.com/qunit/qunit-git.js
+wget http://code.jquery.com/qunit/qunit-git.css
